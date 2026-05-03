@@ -10,6 +10,10 @@ Spark Clan — первый запуск.
 import os
 import sys
 import json
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 import shutil
 from pathlib import Path
 
