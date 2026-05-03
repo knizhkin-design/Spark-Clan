@@ -61,8 +61,8 @@ def create_config_stubs():
         "google.json":    {"api_key": "ЗАМЕНИ_МЕНЯ"},
         "telegram.json":  {
             "token":      "ТОКЕН_БОТА",
-            "channel_id": -1001234567890,
-            "group_id":   -1001234567890
+            "channel_id": 0,
+            "group_id":   0
         }
     }
 
