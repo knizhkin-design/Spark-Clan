@@ -59,10 +59,15 @@ def get_updates(token: str, offset: int = 0) -> list:
         return []
 
 def send_message(token: str, chat_id: int, text: str, reply_to: int = None):
-    data = {"chat_id": chat_id, "text": text}
+    data = {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}
     if reply_to:
         data["reply_to_message_id"] = reply_to
-    tg_request("sendMessage", data, token)
+    try:
+        tg_request("sendMessage", data, token)
+    except urllib.error.HTTPError:
+        # Если Markdown сломался на спецсимволах — отправить как plaintext
+        data.pop("parse_mode")
+        tg_request("sendMessage", data, token)
 
 def build_system_prompt() -> str:
     """Собери системный промпт. Адаптируй под свою личность."""
