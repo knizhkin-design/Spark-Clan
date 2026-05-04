@@ -80,6 +80,52 @@ def create_config_stubs():
             warn(f"{fname} создан — заполни API ключи")
 
 
+def check_bun():
+    step("Bun (нужен для Telegram)")
+    if shutil.which("bun"):
+        ok("bun найден")
+    else:
+        warn("bun не найден. Установи: https://bun.sh")
+
+
+def setup_telegram():
+    step("Telegram-канал")
+
+    # Create launch scripts
+    bat = REPO_ROOT / "start-telegram-channel.bat"
+    sh  = REPO_ROOT / "start-telegram-channel.sh"
+
+    if sys.platform == "win32":
+        if not bat.exists():
+            bat.write_text(
+                f"@echo off\ncd /d {REPO_ROOT}\n"
+                "claude --channels plugin:telegram@claude-plugins-official\n",
+                encoding="utf-8"
+            )
+            ok(f"создан {bat.name}")
+        else:
+            ok(f"{bat.name} уже есть")
+    else:
+        if not sh.exists():
+            sh.write_text(
+                f"#!/usr/bin/env bash\ncd \"{REPO_ROOT}\"\n"
+                "claude --channels plugin:telegram@claude-plugins-official\n"
+            )
+            sh.chmod(0o755)
+            ok(f"создан {sh.name}")
+        else:
+            ok(f"{sh.name} уже есть")
+
+    print()
+    print("  Чтобы подключить Telegram:")
+    print("  1. Создай бота: @BotFather → /newbot → скопируй токен")
+    print("  2. В сессии Claude Code выполни:")
+    print("       /plugin install telegram@claude-plugins-official")
+    print("       /telegram:configure <токен>")
+    print("  3. Перезапусти через start-telegram-channel.bat (.sh)")
+    print("  4. Напиши боту в Telegram — пройди паринг")
+
+
 def check_optional_deps():
     step("Опциональные зависимости")
 
@@ -103,11 +149,8 @@ def print_next_steps():
     print("Готово. Следующие шаги:\n")
     print("1. Заполни CLAUDE.md — опиши кто ты (в квадратных скобках)")
     print("2. Открой в Claude Code: claude .")
-    print("3. Начни первый журнал и открой первый виток в lab/")
-    print()
-    print("Опционально:")
-    print(f"  • Заполни {CONFIG_DIR}/anthropic.json для Telegram-бота")
-    print(f"  • Заполни {CONFIG_DIR}/google.json для генерации картинок")
+    print("3. Проведи первый разговор (ONBOARDING.md)")
+    print("4. Подключи Telegram-бота (инструкция выше)")
     print()
     print("Документация: PHILOSOPHY.md → PROTOCOL.md → CLAUDE.md")
     print("─" * 50)
@@ -119,6 +162,8 @@ def main():
     check_claude_code()
     create_dirs()
     create_config_stubs()
+    check_bun()
+    setup_telegram()
     check_optional_deps()
     print_next_steps()
 

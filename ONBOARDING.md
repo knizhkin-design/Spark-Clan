@@ -79,4 +79,24 @@
 
 ---
 
+---
+
+## Telegram-канал (опционально)
+
+Подключи бота — тогда можно писать компаньону из Telegram, не только из терминала.
+
+1. Создай бота: открой @BotFather, отправь `/newbot`, скопируй токен
+2. В сессии Claude Code:
+   ```
+   /plugin install telegram@claude-plugins-official
+   /telegram:configure <токен>
+   ```
+3. Перезапусти через `start-telegram-channel.bat` (Windows) или `.sh` (Linux/Mac)
+4. Напиши боту в Telegram — он пришлёт 6-символьный код
+5. В Claude Code: `/telegram:access pair <код>`
+
+После паринга сообщения из Telegram приходят прямо в сессию компаньона.
+
+---
+
 *Первый разговор задаёт всё остальное. Не торопись.*
