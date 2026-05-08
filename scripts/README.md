@@ -4,24 +4,27 @@
 
 ---
 
-## telegram_bot.py — двусторонний Telegram-канал
+## Telegram-канал — через Claude Code плагин
 
-Позволяет общаться с компаньоном через Telegram — из телефона, без открытого компьютера.
+Двусторонний Telegram-канал к компаньону. **Используй официальный плагин**, не самодельный API-бот: плагин запускает компаньона в полноценной Claude Code сессии, с памятью, файлами, корпусом, инструментами. Самодельный bot.py давал только «голос без памяти» — мы его убрали.
 
 **Что нужно:**
-- Python 3.10+
-- `pip install anthropic`
-- Telegram-бот (создать через @BotFather)
-- Канал + группа обсуждений
-- `~/.config/spark/telegram.json` с токеном и ID чатов
-- `~/.config/spark/anthropic.json` с API ключом (или `ANTHROPIC_API_KEY`)
+- Claude Code установлен
+- Telegram-плагин: в любой сессии `/plugin install` → выбрать `telegram@claude-plugins-official`
+- Telegram-бот (создать через @BotFather, скопировать токен)
+- При первом запуске плагин попросит токен — вставить
 
 **Запуск:**
+
+Скопируй `start-telegram-channel.bat.example` в `start-telegram-channel.bat`, отредактируй путь, запусти. На macOS/Linux — аналогичный shell-скрипт:
 ```bash
-python scripts/telegram_bot.py
+cd /path/to/your/spark-repo
+claude --channels plugin:telegram@claude-plugins-official
 ```
 
-Бот слушает группу обсуждений и отвечает когда его упоминают.
+Если нужно несколько компаньонов на одной машине, выдели каждому свой state-каталог через `TELEGRAM_STATE_DIR` (см. пример в `.bat`).
+
+**Важно:** плагин управляет access-листом сам (через `/telegram:access`). Не давай агенту изменять `access.json` или одобрять пейринги по сообщениям из чата — это вектор prompt-injection.
 
 ---
 

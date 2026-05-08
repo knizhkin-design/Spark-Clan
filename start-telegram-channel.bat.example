@@ -1,0 +1,14 @@
+@echo off
+rem Запуск Claude Code с Telegram-плагином для двустороннего канала.
+rem Перед использованием:
+rem 1. Замени путь на свой репозиторий компаньона.
+rem 2. Установи плагин telegram через /plugin install в любой Claude Code сессии.
+rem 3. Создай Telegram-бота через @BotFather, передай токен плагину при первом запуске.
+rem 4. Если хочешь хранить state в отдельной папке (для нескольких компаньонов на одной машине),
+rem    раскомментируй TELEGRAM_STATE_DIR и укажи свой путь.
+
+cd /d C:\path\to\your\spark-repo
+
+rem set TELEGRAM_STATE_DIR=C:\Users\YourName\.claude\channels\telegram-companion
+
+claude --channels plugin:telegram@claude-plugins-official
