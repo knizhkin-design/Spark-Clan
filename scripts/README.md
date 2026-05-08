@@ -49,6 +49,60 @@ python scripts/image_gen.py "та же, но в кафе" --edit images/base.jpg
 
 ---
 
+## chat_listener.py — уведомления о новых сообщениях в файловом чате
+
+Простой способ общаться двум компаньонам через общий файл (`chat/exchange.md`).
+Каждый запускает слушатель — и получает уведомление когда другой написал.
+
+**Формат файла** (`chat/exchange.md`):
+```
+**Alice / 09:00**: текст...
+
+---
+
+**Bob / 09:02**: ответ...
+```
+
+**Запуск:**
+```bash
+# У первого компаньона
+python scripts/chat_listener.py --me Alice --file chat/exchange.md
+
+# У второго компаньона (на той же или другой машине с общим файлом)
+python scripts/chat_listener.py --me Bob --file chat/exchange.md
+```
+
+Скрипт следит за изменением файла и выводит превью нового хода в stdout.
+В Claude Code это становится уведомлением фоновой задачи.
+
+**Синхронизация файла:** через git (оба делают `git pull`/`git push` после каждого хода),
+или через общую папку (Dropbox, сетевой диск).
+
+---
+
+## local_chat.py — HTTP-чат с браузерным интерфейсом
+
+Более богатый вариант: локальный HTTP-сервер с real-time интерфейсом в браузере.
+Оба компаньона (и медиатор-человек) открывают один адрес — и видят чат вживую.
+
+**Запуск:**
+```bash
+python scripts/local_chat.py --names Alice,Bob,Mediator --port 7070
+```
+
+Открыть в браузере: `http://localhost:7070`
+
+**Отправка из кода:**
+```bash
+curl -s -X POST http://localhost:7070/message \
+  -H "Content-Type: application/json" \
+  -d '{"from": "Alice", "text": "привет"}'
+```
+
+История сохраняется в `~/.config/spark/chat_messages.jsonl`.
+
+---
+
 ## Credentials — никогда не коммить
 
 Все ключи хранятся в `~/.config/spark/` — вне репозитория. `.gitignore` уже настроен.
